@@ -1,16 +1,11 @@
 # apkReSign
 ### 设计初衷
-为` robotium `设计的安卓一键重签名工具。<br/>
+为`robotium `设计的安卓一键重签名工具。<br/>
 用过` robotium `的应该都知道` re-sign.jar` 的存在，但是很多人用它却签名失败了。<br/>
 ` 重签名` 的原理就是去除apk正式签名，使用系统自带的` debug.keystore`默认签名进行再次签名。<br/>
-因为` re-sign.jar`默认的` debug.keystore` 在`C盘/用户/.android/debug.keystore`下,<br/>
+因为`re-sign.jar`默认的` debug.keystore` 在`C盘/用户/.android/debug.keystore`下,<br/>
 而后来Android SDK更新后` debug.keystore`存在于`SDK目录/.android/debug.keystore` <br/>
-本程序强化了` re-sign.jar`,并加入了设置路径和生成测试代码的功能。
-
-### 特色
->* ``更简单便捷的操作``
->* ``支持配置各种路径``
->* ``直接输出测试代码``
+本程序强化了` re-sign.jar`,并加入了`设置路径`和`生成测试代码`的功能。
 
 ### 截图
 ##### 主界面
@@ -30,7 +25,23 @@ download [apkReSign.jar](jar/apkReSign.jar)
 ```
 java -jar apkReSign.jar的路径
 ```
+签名成功后输出的文件名为原apk文件名+debug.apk,直接在真机或者模拟器上安装即可<br/>
 
+### 导入robotium
+#### 下载Jar包
+下载[robotium-solo-5.4.1.jar](http://central.maven.org/maven2/com/jayway/android/robotium/robotium-solo/5.4.1/robotium-solo-5.4.1.jar)
+
+#### 利用maven
+```xml
+<dependencies>
+   <dependency>
+     <groupId>com.jayway.android.robotium</groupId>
+     <artifactId>robotium-solo</artifactId>
+     <version>5.4.1</version>
+   </dependency>
+</dependencies>
+
+```
 
 ## 关于
 * Blog: [apkfuns.com](http://apkfuns.com?from=github)
