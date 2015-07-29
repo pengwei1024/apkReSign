@@ -1,12 +1,17 @@
 # apkReSign
-android apk fast resign for robotium Automated testing
+### 设计初衷
+为` robotium `设计的安卓一键重签名工具。<br/>
+用过` robotium `的应该都知道` re-sign.jar` 的存在，但是很多人用它缺签名失败了。<br/>
+因为` re-sign.jar`默认的` debug.keystore` 在`C盘/用户/.android/debug.keystore`下,<br/>
+而后台Android SDK更新后` debug.keystore`存在于`SDK目录/.android/debug.keystore` <br/>
+本程序强化了` re-sign.jar`,并加入了设置路径和生成测试代码的功能。
 
-### Features
+### 特色
 >* ``更简单便捷的操作``
 >* ``支持配置各种路径``
 >* ``直接输出测试代码``
 
-### screenshot
+### 截图
 ##### 主界面
 ![截图](screenshots/screenshot01.png)
 ##### 生成测试代码
@@ -14,23 +19,24 @@ android apk fast resign for robotium Automated testing
 ##### 设置jdk、sdk、debug.keystore路径
 ![截图](screenshots/screenshot03.png)
 
-## Usage
-download [apkReSign.jar](./jar/apkReSign.jar)
-#### Method 1
-double click apkReSign.jar to work
-#### Method 2
-cmd input<br/>
+## 用法
+download [apkReSign.jar](jar/apkReSign.jar)
+#### 用法1
+双击apkReSign.jar运行
+
+#### 用法2
+在cmd或者命令行下执行以下语句
 ```
 java -jar apkReSign.jar的路径
 ```
 
 
-## About
+## 关于
 * Blog: [apkfuns.com](http://apkfuns.com?from=github)
 * Email: [pengwei1024@gmail.com](http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=pengwei1024@gmail.com)
 
-### Thanks
-thanks to [troido/resign](https://github.com/troido/resign)
+### 致谢
+感谢 [troido/resign](https://github.com/troido/resign)
 
 ### License
 <pre>
