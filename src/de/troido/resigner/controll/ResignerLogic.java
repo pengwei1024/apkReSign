@@ -32,6 +32,7 @@ import org.xmlpull.v1.XmlPullParser;
 
 import android.content.res.AXmlResourceParser;
 import android.util.TypedValue;
+import de.troido.resigner.utils.PropertiesUtil;
 
 public class ResignerLogic {
 
@@ -82,8 +83,21 @@ public class ResignerLogic {
 
 	public static void signWithDebugKey(String inputFile) throws Exception {
 		String userDir = System.getProperty("user.home");
-//		String debugKeyStore = userDir + "/.android/debug.keystore";
-		String debugKeyStore = "D:/android-sdk/.android/debug.keystore";
+		String userDebugKeyStore = userDir + "/.android/debug.keystore";
+		String debugKeyStore = System.getenv("ANDROID_HOME")+"/.android/debug.keystore";
+		if(!new File(debugKeyStore).exists()){
+			if(new File(userDebugKeyStore).exists()){
+				debugKeyStore = userDebugKeyStore;
+			}else{
+				if(new File(PropertiesUtil.get("debug.keystore")).exists()){
+					debugKeyStore = PropertiesUtil.get("debug.keystore");
+				}else{
+					throw new RuntimeException(
+							"please set the debug.keystore path.");
+				}
+			}
+		}
+		PropertiesUtil.put("debug.keystore", debugKeyStore);
 		String cmdLine[] = { jarsignerpath, "-digestalg", "SHA1", "-sigalg", "MD5withRSA",
 				 "-keystore", debugKeyStore, "-storepass",
 				"android", "-keypass", "android", inputFile, "androiddebugkey" };

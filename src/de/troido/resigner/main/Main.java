@@ -15,12 +15,12 @@ package de.troido.resigner.main;
 
 import de.troido.resigner.controll.ResignerLogic;
 import de.troido.resigner.ui.MainWindow;
+import de.troido.resigner.ui.ShowCodeWindow;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 		if (args.length == 0)
 			new MainWindow();
-
 		if (args.length == 2) {
 			try {
 				ResignerLogic.checkEnvironment();

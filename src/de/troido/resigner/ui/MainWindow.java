@@ -28,6 +28,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -40,7 +41,7 @@ import javax.swing.JPanel;
 import de.troido.resigner.controll.ResignerLogic;
 import de.troido.resigner.utils.PropertiesUtil;
 
-public class MainWindow extends JPanel implements DropTargetListener {
+public class MainWindow extends JPanel implements DropTargetListener ,ActionListener{
 	private BufferedImage img;
 	public static PathSettingWindow pathSetting;
 
@@ -78,15 +79,10 @@ public class MainWindow extends JPanel implements DropTargetListener {
 		JMenuBar menuBar = new JMenuBar();
 		JMenuItem optionsItem = new JMenuItem("option");
 		menuBar.add(optionsItem);
-		optionsItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(pathSetting == null){
-					pathSetting = new PathSettingWindow();
-				}else{
-					pathSetting.toFront();
-				}
-			}
-		});
+		JMenuItem optionsItem1 = new JMenuItem("about");
+		menuBar.add(optionsItem1);
+		optionsItem1.addActionListener(this);
+		optionsItem.addActionListener(this);
 		f.setJMenuBar(menuBar);
 	}
 
@@ -154,9 +150,10 @@ public class MainWindow extends JPanel implements DropTargetListener {
 				outFileName = outFileName + ".apk";
 			String result[] = ResignerLogic.resign(inFileName, outFileName);
 			if (result != null) {
-				JOptionPane.showMessageDialog(this,
+				/*JOptionPane.showMessageDialog(this,
 						"apk successfully re-signed\n\nPackage name: "
-								+ result[0] + "\nMain activity: " + result[1]);
+								+ result[0] + "\nMain activity: " + result[1]);*/
+				new ShowCodeWindow(result[0], result[1]);
 			}
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
@@ -167,5 +164,22 @@ public class MainWindow extends JPanel implements DropTargetListener {
 	@Override
 	public void dropActionChanged(DropTargetDragEvent dtde) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getActionCommand().equals("option")){
+			if(pathSetting == null){
+				pathSetting = new PathSettingWindow();
+			}else{
+				pathSetting.toFront();
+			}
+		}else if(e.getActionCommand().equals("about")){
+			try {
+				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler https://github.com/pengwei1024/apkReSign");
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
 	}
 }

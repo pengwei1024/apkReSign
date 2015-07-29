@@ -24,7 +24,7 @@ public final class PropertiesUtil {
     }
 
     /**
-     * д��ֵ
+     * д��ֵ
      * @param key
      * @param value
      */
@@ -39,6 +39,10 @@ public final class PropertiesUtil {
             e.printStackTrace();
         }
 
+    }
+
+    public static String get(String key){
+        return get(key, "");
     }
 
     public static String get(String key, String defaultValue){
