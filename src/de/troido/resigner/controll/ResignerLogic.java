@@ -55,8 +55,7 @@ public class ResignerLogic {
 				+ "/tools/zipalign";
 		// if (!new File(jarsignerpath).exists()) throw new
 		// RuntimeException("Could not find jarsigner in JAVA_HOME/bin, please check if the path is correct");
-		// if (!new File(zipalignpath).exists()) throw new
-		// RuntimeException("Could not find zipalign in ANDROID_HOME/tools, please check if the path is correct");
+
 	}
 
 	public static String join(String cmd[]) {
@@ -68,6 +67,8 @@ public class ResignerLogic {
 
 	public static void zipAlign(String inputFile, String outputFile)
 			throws Exception {
+		if (!new File(zipalignpath+".exe").exists()) throw new
+				RuntimeException("找不到zipalign文件，请从sdk/build-tools/任意版本复制一个zipalign.exe到tools文件夹下");
 		String cmdLine[] = { zipalignpath, "-f", "4", inputFile, outputFile };
 		System.out.println("Running zipalign\nCommand line: " + join(cmdLine));
 		Process proc = Runtime.getRuntime().exec(cmdLine);
