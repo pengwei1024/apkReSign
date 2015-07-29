@@ -81,6 +81,7 @@ public class MainWindow extends JPanel implements DropTargetListener ,ActionList
 		menuBar.add(optionsItem);
 		JMenuItem optionsItem1 = new JMenuItem("about");
 		menuBar.add(optionsItem1);
+		menuBar.add( new JMenuItem("V1.0.0"));
 		optionsItem1.addActionListener(this);
 		optionsItem.addActionListener(this);
 		f.setJMenuBar(menuBar);
