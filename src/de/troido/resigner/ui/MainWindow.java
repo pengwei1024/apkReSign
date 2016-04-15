@@ -13,9 +13,7 @@
  */
 package de.troido.resigner.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
@@ -35,11 +33,11 @@ import javax.swing.*;
 import com.apkfuns.apkresign.BrowserUtil;
 import com.apkfuns.apkresign.Global;
 import de.troido.resigner.controll.ReSignerLogic;
-import de.troido.resigner.utils.PropertiesUtil;
 
 public class MainWindow extends JPanel implements DropTargetListener, ActionListener {
     private BufferedImage img;
     public static PathSettingWindow pathSetting;
+    public JLabel progressLabel;
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -59,6 +57,10 @@ public class MainWindow extends JPanel implements DropTargetListener, ActionList
         DropTarget dt = new DropTarget(f, this);
         this.setDropTarget(dt);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        progressLabel = new JLabel("正在重签名中,请稍等...");
+        progressLabel.setFont(new Font("Dialog", 1, 16));
+        setProgressLabel(false);
+        add(progressLabel);
         f.getContentPane().add(this);
         f.setSize(318, 335);
         f.setResizable(false);
@@ -77,6 +79,15 @@ public class MainWindow extends JPanel implements DropTargetListener, ActionList
         f.setJMenuBar(menuBar);
         f.setVisible(true);
         checkEnvironment();
+    }
+
+    /**
+     * 设置进度提示是否显示
+     *
+     * @param show
+     */
+    public void setProgressLabel(boolean show) {
+        progressLabel.setVisible(show);
     }
 
     private boolean checkEnvironment() {
@@ -131,6 +142,7 @@ public class MainWindow extends JPanel implements DropTargetListener, ActionList
             if (!checkEnvironment()) {
                 return;
             }
+            setProgressLabel(true);
             String inFileName = "";
             try {
                 java.util.List files = (java.util.List) dtde.getTransferable()
@@ -148,7 +160,6 @@ public class MainWindow extends JPanel implements DropTargetListener, ActionList
             fc.setSelectedFile(outFile);
             // In response to a button click:
             int returnVal = fc.showSaveDialog(this);
-
             if (returnVal != JFileChooser.APPROVE_OPTION)
                 return;
             outFile = fc.getSelectedFile();
@@ -157,13 +168,15 @@ public class MainWindow extends JPanel implements DropTargetListener, ActionList
                 outFileName = outFileName + ".apk";
             String result[] = ReSignerLogic.resign(inFileName, outFileName);
             if (result != null) {
-                /*JOptionPane.showMessageDialog(this,
+                JOptionPane.showMessageDialog(this,
                         "apk successfully re-signed\n\nPackage name: "
-								+ result[0] + "\nMain activity: " + result[1]);*/
-                new ShowCodeWindow(result[0], result[1]);
+                                + result[0] + "\nMain activity: " + result[1]);
+//                new ShowCodeWindow(result[0], result[1]);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        } finally {
+            setProgressLabel(false);
         }
 
     }
