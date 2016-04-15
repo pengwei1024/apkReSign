@@ -9,14 +9,15 @@
 
 ### 截图
 ##### 主界面
-![截图](screenshots/screenshot01.png)
+<img src= "screenshots/screenshot01.png" width="500px">
+![截图]()
 ##### 生成测试代码
-![截图](screenshots/screenshot02.png)
+<img src= "screenshots/screenshot02.png" width="500px">
 ##### 设置jdk、sdk、debug.keystore路径
-![截图](screenshots/screenshot03.png)
+<img src= "screenshots/screenshot03.png" width="500px">
 
 ## 用法
-download [apkReSign.jar](jar/apkReSign.jar)
+download [apkReSign.jar](jar/)
 #### 用法1
 双击apkReSign.jar运行
 
@@ -52,7 +53,7 @@ java -jar apkReSign.jar的路径
 
 ### License
 <pre>
-Copyright 2015 Orhan Obut
+Copyright pengwei1024
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

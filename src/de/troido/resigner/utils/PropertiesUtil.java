@@ -1,22 +1,25 @@
 package de.troido.resigner.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
  * Created by pengwei08 on 2015/7/23.
  */
-public final class PropertiesUtil {
+public class PropertiesUtil {
 
-    private static String fileName = System.getProperty("user.dir") +
-            "/assets/config.properties";
+    private static String filePath = System.getProperty("user.home") + "/apkResign";
+    private static String fileName = filePath + "/config.properties";
     private static Properties props = new Properties();
+
     static {
         try {
+            File path = new File(filePath);
+            File proFile = new File(fileName);
+            if (!path.exists() || !proFile.exists()) {
+                path.mkdirs();
+                proFile.createNewFile();
+            }
             props.load(new FileInputStream(fileName));
         } catch (IOException e) {
             e.printStackTrace();
@@ -25,10 +28,11 @@ public final class PropertiesUtil {
 
     /**
      * д��ֵ
+     *
      * @param key
      * @param value
      */
-    public static void put(String key, String value){
+    public static void put(String key, String value) {
         try {
             final OutputStream fos = new FileOutputStream(fileName);
             props.setProperty(key, value);
@@ -38,15 +42,14 @@ public final class PropertiesUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-    public static String get(String key){
+    public static String get(String key) {
         return get(key, "");
     }
 
-    public static String get(String key, String defaultValue){
+    public static String get(String key, String defaultValue) {
         String value = props.getProperty(key);
-        return value == null?defaultValue:value;
+        return value == null ? defaultValue : value;
     }
 }

@@ -28,159 +28,161 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-import de.troido.resigner.controll.ResignerLogic;
+import com.apkfuns.apkresign.BrowserUtil;
+import com.apkfuns.apkresign.Global;
+import de.troido.resigner.controll.ReSignerLogic;
 import de.troido.resigner.utils.PropertiesUtil;
 
-public class MainWindow extends JPanel implements DropTargetListener ,ActionListener{
-	private BufferedImage img;
-	public static PathSettingWindow pathSetting;
+public class MainWindow extends JPanel implements DropTargetListener, ActionListener {
+    private BufferedImage img;
+    public static PathSettingWindow pathSetting;
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
-		g2.drawImage(img, 0, 0, this);
-	}
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
+        g2.drawImage(img, 0, 0, this);
+    }
 
-	public MainWindow() throws Exception {
-		try {
-			img = ImageIO.read(new File("res/resigner.png"));
-		} catch (Exception e) {
-			img = ImageIO.read(getClass().getResourceAsStream(
-					"/res/resigner.png"));
-		}
-		JFrame f = new JFrame();
-		DropTarget dt = new DropTarget(f, this);
-		this.setDropTarget(dt);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.getContentPane().add(this);
-		f.setSize(318, 335);
-		f.setResizable(false);
-		f.setTitle("apk resigner");
-		this.setBackground(Color.white);
-		f.setLocationRelativeTo(getRootPane());
-		f.setVisible(true);
-		try {
-			ResignerLogic.checkEnvironment();
-		} catch (RuntimeException exc) {
-			JOptionPane.showMessageDialog(this, exc.getMessage());
-			System.exit(0);
-		}
-		JMenuBar menuBar = new JMenuBar();
-		JMenuItem optionsItem = new JMenuItem("option");
-		menuBar.add(optionsItem);
-		JMenuItem optionsItem1 = new JMenuItem("about");
-		menuBar.add(optionsItem1);
-		menuBar.add( new JMenuItem("V1.0.0"));
-		optionsItem1.addActionListener(this);
-		optionsItem.addActionListener(this);
-		f.setJMenuBar(menuBar);
-	}
+    public MainWindow() throws Exception {
+        try {
+            img = ImageIO.read(new File("res/resigner.png"));
+        } catch (Exception e) {
+            img = ImageIO.read(getClass().getResourceAsStream(
+                    "/res/resigner.png"));
+        }
+        JFrame f = new JFrame();
+        DropTarget dt = new DropTarget(f, this);
+        this.setDropTarget(dt);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.getContentPane().add(this);
+        f.setSize(318, 335);
+        f.setResizable(false);
+        f.setTitle("apk resigner");
+        this.setBackground(Color.white);
+        f.setLocationRelativeTo(getRootPane());
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.setVisible(true);
+        JMenuItem optionsItem = new JMenuItem("option");
+        menuBar.add(optionsItem);
+        JMenuItem optionsItem1 = new JMenuItem("about");
+        menuBar.add(optionsItem1);
+        menuBar.add(new JMenuItem("V" + Global.VERSION));
+        optionsItem1.addActionListener(this);
+        optionsItem.addActionListener(this);
+        f.setJMenuBar(menuBar);
+        f.setVisible(true);
+        checkEnvironment();
+    }
 
-	public static void main(String[] args) throws Exception {
-		new MainWindow();
-	}
+    private boolean checkEnvironment() {
+        try {
+            ReSignerLogic.checkEnvironment();
+            return true;
+        } catch (RuntimeException exc) {
+            JOptionPane.showMessageDialog(this, exc.getMessage());
+        }
+        return false;
+    }
 
-	@Override
-	public void dragEnter(DropTargetDragEvent dtde) {
-		// TODO Auto-generated method stub
+    public static void main(String[] args) throws Exception {
+        new MainWindow();
+    }
 
-	}
+    @Override
+    public void dragEnter(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void dragExit(DropTargetEvent dte) {
-		// TODO Auto-generated method stub
+    }
 
-	}
+    @Override
+    public void dragExit(DropTargetEvent dte) {
+        // TODO Auto-generated method stub
 
-	@Override
-	public void dragOver(DropTargetDragEvent dtde) {
-		try {
-			java.util.List files = (java.util.List) dtde.getTransferable()
-					.getTransferData(DataFlavor.javaFileListFlavor);
-			if (files.size() != 1) {
-				dtde.rejectDrag();
-				return;
-			}
-			if (((File) files.get(0)).getName().endsWith(".apk")) {
-				dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-			} else {
-				dtde.rejectDrag();
-			}
-		} catch (Exception e) {
-		}
-	}
+    }
 
-	@Override
-	public void drop(DropTargetDropEvent dtde) {
-		dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-		try {
-			String inFileName = "";
-			try {
-				java.util.List files = (java.util.List) dtde.getTransferable()
-						.getTransferData(DataFlavor.javaFileListFlavor);
-				File inFile = ((File) files.get(0));
-				inFileName = inFile.getAbsolutePath();
-			} catch (UnsupportedFlavorException exc) {
-				inFileName = (String) dtde.getTransferable().getTransferData(
-						DataFlavor.stringFlavor);
-				System.out.println("re-signing: " + inFileName);
-			}
-			File outFile = new File(inFileName.replaceAll(".apk", "_debug.apk"));
-			// Create a file chooser
-			final JFileChooser fc = new JFileChooser();
-			fc.setSelectedFile(outFile);
-			// In response to a button click:
-			int returnVal = fc.showSaveDialog(this);
+    @Override
+    public void dragOver(DropTargetDragEvent dtde) {
+        try {
+            java.util.List files = (java.util.List) dtde.getTransferable()
+                    .getTransferData(DataFlavor.javaFileListFlavor);
+            if (files.size() != 1) {
+                dtde.rejectDrag();
+                return;
+            }
+            if (((File) files.get(0)).getName().endsWith(".apk")) {
+                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
+            } else {
+                dtde.rejectDrag();
+            }
+        } catch (Exception e) {
 
-			if (returnVal != JFileChooser.APPROVE_OPTION)
-				return;
-			outFile = fc.getSelectedFile();
-			String outFileName = outFile.getAbsolutePath();
-			if (!outFileName.endsWith(".apk"))
-				outFileName = outFileName + ".apk";
-			String result[] = ResignerLogic.resign(inFileName, outFileName);
-			if (result != null) {
-				/*JOptionPane.showMessageDialog(this,
-						"apk successfully re-signed\n\nPackage name: "
+        }
+    }
+
+    @Override
+    public void drop(DropTargetDropEvent dtde) {
+        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+        try {
+            if (!checkEnvironment()) {
+                return;
+            }
+            String inFileName = "";
+            try {
+                java.util.List files = (java.util.List) dtde.getTransferable()
+                        .getTransferData(DataFlavor.javaFileListFlavor);
+                File inFile = ((File) files.get(0));
+                inFileName = inFile.getAbsolutePath();
+            } catch (UnsupportedFlavorException exc) {
+                inFileName = (String) dtde.getTransferable().getTransferData(
+                        DataFlavor.stringFlavor);
+                System.out.println("re-signing: " + inFileName);
+            }
+            File outFile = new File(inFileName.replaceAll(".apk", "_debug.apk"));
+            // Create a file chooser
+            final JFileChooser fc = new JFileChooser();
+            fc.setSelectedFile(outFile);
+            // In response to a button click:
+            int returnVal = fc.showSaveDialog(this);
+
+            if (returnVal != JFileChooser.APPROVE_OPTION)
+                return;
+            outFile = fc.getSelectedFile();
+            String outFileName = outFile.getAbsolutePath();
+            if (!outFileName.endsWith(".apk"))
+                outFileName = outFileName + ".apk";
+            String result[] = ReSignerLogic.resign(inFileName, outFileName);
+            if (result != null) {
+                /*JOptionPane.showMessageDialog(this,
+                        "apk successfully re-signed\n\nPackage name: "
 								+ result[0] + "\nMain activity: " + result[1]);*/
-				new ShowCodeWindow(result[0], result[1]);
-			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
-		}
+                new ShowCodeWindow(result[0], result[1]);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "ERROR: " + e.getMessage());
+        }
 
-	}
+    }
 
-	@Override
-	public void dropActionChanged(DropTargetDragEvent dtde) {
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+        // TODO Auto-generated method stub
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getActionCommand().equals("option")){
-			if(pathSetting == null){
-				pathSetting = new PathSettingWindow();
-			}else{
-				pathSetting.toFront();
-			}
-		}else if(e.getActionCommand().equals("about")){
-			try {
-				Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler https://github.com/pengwei1024/apkReSign");
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getActionCommand().equals("option")) {
+            if (pathSetting == null) {
+                pathSetting = new PathSettingWindow();
+            } else {
+                pathSetting.toFront();
+            }
+        } else if (e.getActionCommand().equals("about")) {
+            BrowserUtil.open(Global.ABOUT_UEL);
+        }
+    }
 }

@@ -12,6 +12,8 @@ public class BaseJFrame extends JFrame {
 
     public BaseJFrame() throws HeadlessException {
         setVisible(true);
+        // 设置窗体居中
+        setLocationRelativeTo(null);
     }
 
     /**
