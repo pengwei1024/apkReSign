@@ -10,7 +10,6 @@
 ### 截图
 ##### 主界面
 <img src= "screenshots/screenshot01.png" width="500px">
-![截图]()
 ##### 生成测试代码
 <img src= "screenshots/screenshot02.png" width="500px">
 ##### 设置jdk、sdk、debug.keystore路径
