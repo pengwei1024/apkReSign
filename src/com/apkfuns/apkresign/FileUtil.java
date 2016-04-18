@@ -15,12 +15,22 @@ public class FileUtil {
      * @param target
      */
     public static void copyFile(File source, File target) {
+        InputStream is = null;
+        try {
+            is = new FileInputStream(source);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        copyFile((FileInputStream) is, target);
+    }
+
+    public static void copyFile(FileInputStream source, File target) {
         FileChannel in = null;
         FileChannel out = null;
         FileInputStream inStream = null;
         FileOutputStream outStream = null;
         try {
-            inStream = new FileInputStream(source);
+            inStream = source;
             outStream = new FileOutputStream(target);
             in = inStream.getChannel();
             out = outStream.getChannel();

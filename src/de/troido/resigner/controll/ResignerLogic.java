@@ -25,14 +25,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import com.apkfuns.apkresign.DeviceUtil;
-import com.apkfuns.apkresign.FileUtil;
 import com.apkfuns.apkresign.PathUtil;
 import com.apkfuns.apkresign.TextUtils;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.res.AXmlResourceParser;
 import android.util.TypedValue;
-import de.troido.resigner.utils.PropertiesUtil;
 
 public class ReSignerLogic {
 
